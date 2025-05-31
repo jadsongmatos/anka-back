@@ -1,0 +1,114 @@
+// This is your Prisma schema file
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema 
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Thing {
+  id      Int     @id
+  label   String
+  comment String?
+
+  person       Person?
+  organization Organization?
+  intangible   Intangible?
+}
+
+model Intangible {
+  id      Int     @id @unique
+  label   String
+  comment String?
+
+  thingId Int   @unique
+  thing   Thing @relation(fields: [thingId], references: [id])
+
+  service         Service?
+  structuredValue StructuredValue?
+}
+
+model Service {
+  id           Int        @id @unique
+  intangibleId Int        @unique
+  intangible   Intangible @relation(fields: [intangibleId], references: [id])
+
+  financialProduct FinancialProduct?
+}
+
+model FinancialProduct {
+  id             Int     @id @unique
+  contributorUrl String?
+  serviceId      Int     @unique
+  service        Service @relation(fields: [serviceId], references: [id])
+
+  investmentOrDeposit InvestmentOrDeposit?
+}
+
+model InvestmentOrDeposit {
+  id                 Int              @id @unique
+  contributorUrl     String?
+  financialProductId Int              @unique
+  financialProduct   FinancialProduct @relation(fields: [financialProductId], references: [id])
+
+  investmentFund InvestmentFund?
+}
+
+model InvestmentFund {
+  id                    Int                 @id @unique
+  contributorUrl        String?
+  sourceUrl             String?
+  isPartOfUrl           String?
+  investmentOrDepositId Int                 @unique
+  investmentOrDeposit   InvestmentOrDeposit @relation(fields: [investmentOrDepositId], references: [id])
+}
+
+model Organization {
+  id      Int     @id @unique
+  label   String
+  comment String?
+  thingId Int     @unique
+  thing   Thing   @relation(fields: [thingId], references: [id])
+
+  governmentOrganization GovernmentOrganization?
+}
+
+model GovernmentOrganization {
+  id             Int          @id @unique
+  label          String
+  comment        String?
+  organizationId Int          @unique
+  organization   Organization @relation(fields: [organizationId], references: [id])
+}
+
+model Person {
+  id                 Int     @id @unique
+  label              String
+  comment            String?
+  owlEquivalentClass String?
+  contributorUrl     String?
+  thingId            Int     @unique
+  thing              Thing   @relation(fields: [thingId], references: [id])
+}
+
+model StructuredValue {
+  id           Int        @id @unique
+  label        String
+  comment      String?
+  intangibleId Int        @unique
+  intangible   Intangible @relation(fields: [intangibleId], references: [id])
+
+  monetaryAmount MonetaryAmount?
+}
+
+model MonetaryAmount {
+  id                Int             @id @unique
+  contributorUrl    String?
+  structuredValueId Int             @unique
+  structuredValue   StructuredValue @relation(fields: [structuredValueId], references: [id])
+}
