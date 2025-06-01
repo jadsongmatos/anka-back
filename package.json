@@ -8,8 +8,11 @@
   },
   "scripts": {
     "test": "node --test test/**/*.test.js",
-    "start": "fastify start -l info app.js",
-    "dev": "fastify start -w -l info -P app.js"
+    "watch:build": "tsc --watch --preserveWatchOutput",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "build": "rimraf dist && tsc",
+    "start": "node dist/server.js",
+    "dev": "nodemon"
   },
   "keywords": [],
   "author": "",
@@ -28,10 +31,16 @@
     "zod-openapi": "^4.2.4"
   },
   "devDependencies": {
-    "@types/node": "^22.15.27",
+    "@types/node": "^22.15.29",
     "prisma": "^6.8.2",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.4",
-    "typescript": "^5.8.3"
-  }
+    "typescript": "^5.8.3",
+    "cross-env": "^7.0.3",
+    "fastify-tsconfig": "^3.0.0",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.5.2",
+    "rimraf": "^5.0.7",
+    "tsconfig-paths": "^4.2.0"
+    }
 }
