@@ -12,7 +12,7 @@ datasource db {
 }
 
 model Thing {
-  id      Int     @id
+  id      Int     @id @default(autoincrement())
   label   String
   comment String?
 
@@ -87,7 +87,7 @@ model GovernmentOrganization {
 }
 
 model Person {
-  id                 Int     @id @unique
+  id                 Int     @id @default(autoincrement())
   label              String
   comment            String?
   owlEquivalentClass String?

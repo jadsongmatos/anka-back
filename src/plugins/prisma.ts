@@ -1,21 +1,23 @@
-'use strict'
+"use strict";
 
-import fp from 'fastify-plugin'
-import { PrismaClient } from '../../generated/prisma'
+import fp from "fastify-plugin";
+import { PrismaClient } from "../../generated/prisma";
 
 export default fp(async (fastify) => {
-  const prisma = new PrismaClient()
-  await prisma.$connect()
+  const prisma = new PrismaClient({
+    log: ["query", "info", "warn", "error"],
+  });
+  await prisma.$connect();
 
-  fastify.decorate('prisma', prisma)
+  fastify.decorate("prisma", prisma);
 
-  fastify.addHook('onClose', async (fastifyInstance) => {
-    await fastifyInstance.prisma.$disconnect()
-  })
-})
+  fastify.addHook("onClose", async (fastifyInstance) => {
+    await fastifyInstance.prisma.$disconnect();
+  });
+});
 
-declare module 'fastify' {
+declare module "fastify" {
   interface FastifyInstance {
-    prisma: PrismaClient
+    prisma: PrismaClient;
   }
 }

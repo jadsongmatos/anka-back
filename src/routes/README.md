@@ -1,29 +1,29 @@
-# Routes Folder
+# Pasta rota
 
-Routes define the pathways within your application.
-Fastify's structure supports the modular monolith approach, where your
-application is organized into distinct, self-contained modules.
-This facilitates easier scaling and future transition to a microservice architecture.
-In the future you might want to independently deploy some of those.
+As rotas definem os caminhos em seu aplicativo.
+A estrutura do Fastify suporta a abordagem de monólitos modulares, onde
+O aplicativo é organizado em módulos diferentes e independentes.
+Isso facilita a escala mais fácil e a transição futura para uma arquitetura de microsserviço.
+No futuro, você pode implantar independentemente alguns deles.
 
-In this folder you should define all the routes that define the endpoints
-of your web application.
-Each service is a [Fastify
-plugin](https://fastify.dev/docs/latest/Reference/Plugins/), it is
-encapsulated (it can have its own independent plugins) and it is
-typically stored in a file; be careful to group your routes logically,
-e.g. all `/users` routes in a `users.js` file. We have added
-a `root.js` file for you with a '/' root added.
+Nesta pasta, você deve definir todas as rotas que definem os terminais
+do seu aplicativo da web.
+Cada serviço é um [fastify
+plugin] (https://fastify.dev/docs/last/reference/plugins/)
+encapsulado (pode ter seus próprios plugins independentes) e é
+Geralmente armazenado em um arquivo; Tenha cuidado para agrupar suas rotas logicamente,
+Por exemplo, todas as rotas `/usuários` em um arquivo 'users.js`. Nós acrescentamos
+Um arquivo `root.js` para você com uma raiz '/' adicionada.
 
-If a single file becomes too large, create a folder and add a `index.js` file there:
-this file must be a Fastify plugin, and it will be loaded automatically
-by the application. You can now add as many files as you want inside that folder.
-In this way you can create complex routes within a single monolith,
-and eventually extract them.
+Se um único arquivo ficar muito grande, crie uma pasta e adicione um arquivo `index.js` lá:
+Este arquivo deve ser um plugue do Fastify e será carregado automaticamente
+pelo aplicativo. Agora você pode adicionar quantos arquivos quiser nesta pasta.
+Dessa forma, você pode criar rotas complexas em um único monólito,
+e eventualmente os extraía.
 
-If you need to share functionality between routes, place that
-functionality into the `plugins` folder, and share it via
-[decorators](https://fastify.dev/docs/latest/Reference/Decorators/).
+Se você precisar compartilhar a funcionalidade entre as rotas, coloque-a
+funcionalidade no `plugins` e compartilhe -a pasta via pasta
+[Decoradores] (https://fastify.dev/docs/last/reference/decoraors/).
 
-If you're a bit confused about using `async/await` to write routes, you would
-better take a look at [Promise resolution](https://fastify.dev/docs/latest/Reference/Routes/#promise-resolution) for more details.
+Se você é um pouco confuso sobre o uso de rotas assíncronas/esperando para escrever, você faria
+Melhor dar uma olhada na [Promise Resolution] (https://fastify.dev/docs/last/reference/Routates/#promise-solition) para obter mais detalhes.
