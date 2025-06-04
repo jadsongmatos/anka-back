@@ -22,19 +22,41 @@ model Thing {
 }
 
 model Intangible {
-  id      Int     @id @unique
-  label   String
+  id      Int     @id @default(autoincrement())
+  label   String?
   comment String?
 
   thingId Int   @unique
   thing   Thing @relation(fields: [thingId], references: [id])
 
-  service         Service?
-  structuredValue StructuredValue?
+  service           Service?
+  structuredValue   StructuredValue?
+  statusEnumeration StatusEnumeration?
+}
+
+model StructuredValue {
+  id           Int        @id @default(autoincrement())
+  label        String?
+  comment      String?
+  intangibleId Int        @unique
+  intangible   Intangible @relation(fields: [intangibleId], references: [id])
+
+  monetaryAmount MonetaryAmount?
+  contactPoint   ContactPoint?
+}
+
+model ContactPoint {
+  id                Int             @id @default(autoincrement())
+  label             String
+  comment           String?
+  email             String?
+  telephone         String?
+  structuredValueId Int             @unique
+  structuredValue   StructuredValue @relation(fields: [structuredValueId], references: [id])
 }
 
 model Service {
-  id           Int        @id @unique
+  id           Int        @id @default(autoincrement())
   intangibleId Int        @unique
   intangible   Intangible @relation(fields: [intangibleId], references: [id])
 
@@ -42,34 +64,15 @@ model Service {
 }
 
 model FinancialProduct {
-  id             Int     @id @unique
-  contributorUrl String?
-  serviceId      Int     @unique
-  service        Service @relation(fields: [serviceId], references: [id])
-
-  investmentOrDeposit InvestmentOrDeposit?
-}
-
-model InvestmentOrDeposit {
-  id                 Int              @id @unique
-  contributorUrl     String?
-  financialProductId Int              @unique
-  financialProduct   FinancialProduct @relation(fields: [financialProductId], references: [id])
-
-  investmentFund InvestmentFund?
-}
-
-model InvestmentFund {
-  id                    Int                 @id @unique
-  contributorUrl        String?
-  sourceUrl             String?
-  isPartOfUrl           String?
-  investmentOrDepositId Int                 @unique
-  investmentOrDeposit   InvestmentOrDeposit @relation(fields: [investmentOrDepositId], references: [id])
+  id           Int     @id @default(autoincrement())
+  serviceId    Int     @unique
+  label        String  @unique
+  interestRate Float
+  service      Service @relation(fields: [serviceId], references: [id])
 }
 
 model Organization {
-  id      Int     @id @unique
+  id      Int     @id @default(autoincrement())
   label   String
   comment String?
   thingId Int     @unique
@@ -79,7 +82,7 @@ model Organization {
 }
 
 model GovernmentOrganization {
-  id             Int          @id @unique
+  id             Int          @id @default(autoincrement())
   label          String
   comment        String?
   organizationId Int          @unique
@@ -91,24 +94,22 @@ model Person {
   label              String
   comment            String?
   owlEquivalentClass String?
-  contributorUrl     String?
   thingId            Int     @unique
   thing              Thing   @relation(fields: [thingId], references: [id])
 }
 
-model StructuredValue {
-  id           Int        @id @unique
+model MonetaryAmount {
+  id                Int             @id @default(autoincrement())
+  structuredValueId Int             @unique
+  value             Float           @default(0.0)
+  currency          String          @default("BRL") // ISO 4217 currency code
+  structuredValue   StructuredValue @relation(fields: [structuredValueId], references: [id])
+}
+
+model StatusEnumeration {
+  id           Int        @id @default(autoincrement())
   label        String
   comment      String?
   intangibleId Int        @unique
   intangible   Intangible @relation(fields: [intangibleId], references: [id])
-
-  monetaryAmount MonetaryAmount?
-}
-
-model MonetaryAmount {
-  id                Int             @id @unique
-  contributorUrl    String?
-  structuredValueId Int             @unique
-  structuredValue   StructuredValue @relation(fields: [structuredValueId], references: [id])
 }

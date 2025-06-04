@@ -50,7 +50,7 @@ const SuccessResponseSchema = z.object({
 
 export default async function (fastify: FastifyInstance) {
   fastify.post(
-    "/persons",
+    "/",
     {
       schema: {
         operationId: 'createPerson',
@@ -66,7 +66,7 @@ export default async function (fastify: FastifyInstance) {
   );
 
   fastify.get(
-    "/persons",
+    "/",
     {
       schema: {
         operationId: 'getAllPersons',
@@ -81,7 +81,7 @@ export default async function (fastify: FastifyInstance) {
   );
 
   fastify.get(
-    "/persons/:id",
+    "/:id",
     {
       schema: {
         operationId: 'getPersonById',
@@ -97,7 +97,7 @@ export default async function (fastify: FastifyInstance) {
   );
 
   fastify.put(
-    "/persons/:id",
+    "/:id",
     {
       schema: {
         operationId: 'updatePerson',
@@ -114,7 +114,7 @@ export default async function (fastify: FastifyInstance) {
   );
 
   fastify.delete(
-    "/persons/:id",
+    "/:id",
     {
       schema: {
         operationId: 'deletePerson',

@@ -12,9 +12,16 @@ import {
 } from "fastify-zod-openapi";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUI from "@fastify/swagger-ui";
+import fastifyCors from "@fastify/cors";
 import { type ZodOpenApiVersion } from "zod-openapi";
 
 export default async function (fastify: FastifyInstance, opts: any) {
+  // Configura CORS
+  await fastify.register(fastifyCors, {
+    origin: "*", //['https://seusite.com', 'https://outrosite.com'],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
+  });
+
   // Configura Zod para validação e serialização
   fastify.setValidatorCompiler(validatorCompiler);
   fastify.setSerializerCompiler(serializerCompiler);
