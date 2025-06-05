@@ -6,78 +6,14 @@ import {
   updateService,
   deleteService,
 } from "../../controllers/service.controller";
-import { z } from "zod";
-import 'zod-openapi/extend';
-
-// Base schemas
-const FinancialProductSchema = z.object({
-  label: z.string().openapi({
-    description: 'Financial product label',
-    example: 'Personal Loan'
-  }),
-  interestRate: z.number().openapi({
-    description: 'Interest rate percentage',
-    example: 5.5
-  }),
-}).openapi({ ref: 'FinancialProduct' });
-
-const StatusSchema = z.object({
-  label: z.string().openapi({
-    description: 'Status label',
-    example: 'Active'
-  }),
-  comment: z.string().nullable().optional().openapi({
-    description: 'Optional status comment',
-    example: 'Service is currently active'
-  }),
-}).openapi({ ref: 'Status' });
-
-const ServiceSchema = z.object({
-  label: z.string().openapi({
-    description: 'Service label',
-    example: 'Premium Banking Service'
-  }),
-  comment: z.string().nullable().optional().openapi({
-    description: 'Optional service comment',
-    example: 'Premium banking services with special rates'
-  }),
-  financialProduct: FinancialProductSchema,
-  status: StatusSchema.optional(),
-}).openapi({ ref: 'Service' });
-
-// Request schemas
-const ServiceUpdateSchema = ServiceSchema.extend({
-  intangibleId: z.number().openapi({
-    description: 'Intangible ID reference',
-    example: 1
-  }),
-}).openapi({ ref: 'ServiceUpdate' });
-
-const ServiceIdSchema = z.object({
-  id: z.coerce.number().openapi({
-    description: 'Service ID',
-    example: 1
-  }),
-}).openapi({ ref: 'ServiceId' });
-
-// Response schemas
-const ServiceResponseSchema = ServiceSchema.extend({
-  id: z.number(),
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
-}).openapi({ ref: 'ServiceResponse' });
-
-const ServicesArrayResponseSchema = z.array(ServiceResponseSchema).openapi({ 
-  ref: 'ServicesArrayResponse',
-  description: 'Array of services'
-});
-
-const DeleteResponseSchema = z.object({
-  message: z.string().openapi({
-    description: 'Deletion confirmation message',
-    example: 'Service deleted successfully'
-  }),
-}).openapi({ ref: 'DeleteResponse' });
+import {
+  ServiceSchema,
+  ServiceUpdateSchema,
+  ServiceIdSchema,
+  ServiceResponseSchema,
+  ServicesArrayResponseSchema,
+  DeleteResponseSchema
+} from "../../types/service.types";
 
 export default async function (fastify: FastifyInstance) {
   fastify.post(

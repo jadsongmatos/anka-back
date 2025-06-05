@@ -11,6 +11,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+generator zod {
+  provider = "zod-prisma-types"
+  output        = "./zod"
+  relationModel = "default"
+}
+
 model Thing {
   id      Int     @id @default(autoincrement())
   label   String
@@ -93,7 +99,6 @@ model Person {
   id                 Int     @id @default(autoincrement())
   label              String
   comment            String?
-  owlEquivalentClass String?
   thingId            Int     @unique
   thing              Thing   @relation(fields: [thingId], references: [id])
 }

@@ -6,47 +6,13 @@ import {
   updatePerson,
   deletePerson,
 } from "../../controllers/person.controller";
-import { z } from "zod";
-import 'zod-openapi/extend';
-
-// Define schemas with refs for components.schemas
-const PersonSchema = z.object({
-  label: z.string().openapi({
-    description: 'Person label',
-    example: 'John Doe'
-  }),
-  comment: z.string().nullable().optional().openapi({
-    description: 'Optional comment about the person',
-    example: 'Primary contact'
-  }),
-  owlEquivalentClass: z.string().nullable().optional().openapi({
-    description: 'OWL equivalent class reference'
-  }),
-  contributorUrl: z.string().nullable().optional().openapi({
-    description: 'URL of the contributor'
-  }),
-}).openapi({ ref: 'Person' });
-
-const PersonUpdateSchema = PersonSchema.extend({
-  thingId: z.number().openapi({
-    description: 'Thing ID reference',
-    example: 1
-  }),
-}).openapi({ ref: 'PersonUpdate' });
-
-const PersonIdSchema = z.object({
-  id: z.coerce.number().openapi({
-    description: 'Person ID',
-    example: 1
-  }),
-}).openapi({ ref: 'PersonId' });
-
-const SuccessResponseSchema = z.object({
-  success: z.boolean().openapi({
-    description: 'Operation success status',
-    example: true
-  }),
-}).openapi({ ref: 'SuccessResponse' });
+import {
+  PersonSchema,
+  PersonUpdateSchema,
+  PersonIdSchema,
+  SuccessResponseSchema
+} from "../../types/person.types";
+import z from "zod";
 
 export default async function (fastify: FastifyInstance) {
   fastify.post(

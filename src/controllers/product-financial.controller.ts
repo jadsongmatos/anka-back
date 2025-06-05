@@ -1,17 +1,14 @@
 import { FastifyRequest, FastifyReply } from "fastify";
+import {
+  FinancialProductRequest,
+  PersonIdParam,
+  ProductIdParam,
+  MonetaryAmountInput,
+} from "../types/product-financial.types";
 
-interface FinancialAssetData {
-  financialProductId: number;
-  monetaryAmount: {
-    value: number;
-    currency?: string;
-  };
-}
-
-// List all financial products for a person
 export const getPersonFinancialProducts = async (
   request: FastifyRequest<{
-    Params: { personsId: number };
+    Params: PersonIdParam;
   }>,
   reply: FastifyReply
 ) => {
@@ -57,8 +54,8 @@ export const getPersonFinancialProducts = async (
 // Create new financial product for person
 export const createPersonFinancialProduct = async (
   request: FastifyRequest<{
-    Params: { personsId: number };
-    Body: FinancialAssetData;
+    Params: PersonIdParam;
+    Body: FinancialProductRequest;
   }>,
   reply: FastifyReply
 ) => {
@@ -133,7 +130,7 @@ export const createPersonFinancialProduct = async (
 // Get specific financial product from person
 export const getPersonFinancialProductById = async (
   request: FastifyRequest<{
-    Params: { personsId: number; id: number };
+    Params: PersonIdParam & ProductIdParam;
   }>,
   reply: FastifyReply
 ) => {
@@ -184,12 +181,9 @@ export const getPersonFinancialProductById = async (
 // Update person's financial product
 export const updatePersonFinancialProduct = async (
   request: FastifyRequest<{
-    Params: { personsId: number; id: number };
+    Params: PersonIdParam & ProductIdParam;
     Body: {
-      monetaryAmount: {
-        value: number;
-        currency?: string;
-      };
+      monetaryAmount: MonetaryAmountInput;
     };
   }>,
   reply: FastifyReply
@@ -277,7 +271,7 @@ export const updatePersonFinancialProduct = async (
 // Delete person's financial product
 export const deletePersonFinancialProduct = async (
   request: FastifyRequest<{
-    Params: { personsId: number; id: number };
+    Params: PersonIdParam & ProductIdParam;
   }>,
   reply: FastifyReply
 ) => {

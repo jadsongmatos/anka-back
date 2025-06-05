@@ -1,29 +1,15 @@
 import { FastifyRequest, FastifyReply } from "fastify";
+import { Person, PersonUpdate, PersonId } from "../types/person.types";
 
 export const createPerson = async (
   request: FastifyRequest<{
-    Body: {
-      label: string;
-      comment?: string;
-      owlEquivalentClass?: string;
-      contact?: {
-        email?: string;
-        telephone?: string;
-        label: string;
-        comment?: string;
-      };
-      status?: {
-        label: string;
-        comment?: string;
-      };
-    };
+    Body: Person;
   }>,
   reply: FastifyReply
 ) => {
   const {
     label,
     comment,
-    owlEquivalentClass,
     contact,
     status,
   } = request.body;
@@ -37,7 +23,6 @@ export const createPerson = async (
           create: {
             label,
             comment,
-            owlEquivalentClass,
           },
         },
         intangible: {
@@ -163,28 +148,13 @@ export const getPersonById = async (
 // Atualizar Person
 export const updatePerson = async (
   request: FastifyRequest<{
-    Params: { id: number };
-    Body: {
-      label: string;
-      comment?: string;
-      owlEquivalentClass?: string;
-      contact?: {
-        email?: string;
-        telephone?: string;
-        label: string;
-        comment?: string;
-      };
-      status?: {
-        label: string;
-        comment?: string;
-      };
-      thingId: number;
-    };
+    Params: PersonId;
+    Body: PersonUpdate;
   }>,
   reply: FastifyReply
 ) => {
   const { id } = request.params;
-  const { label, comment, owlEquivalentClass, contact, status, thingId } = request.body;
+  const { label, comment, contact, status, thingId } = request.body;
 
   try {
     const updatedPerson = await reply.server.prisma.$transaction(async (prisma) => {
@@ -239,7 +209,6 @@ export const updatePerson = async (
         data: {
           label,
           comment,
-          owlEquivalentClass,
         },
         include: {
           thing: {

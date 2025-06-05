@@ -1,19 +1,9 @@
 import { FastifyRequest, FastifyReply } from "fastify";
+import { Service, ServiceUpdate, ServiceId } from "../types/service.types";
 
 export const createService = async (
   request: FastifyRequest<{
-    Body: {
-      label: string;
-      comment?: string;
-      financialProduct: {
-        label: string;
-        interestRate: number;
-      };
-      status?: {
-        label: string;
-        comment?: string;
-      };
-    };
+    Body: Service;
   }>,
   reply: FastifyReply
 ) => {
@@ -91,7 +81,7 @@ export const getAllServices = async (
 
 export const getServiceById = async (
   request: FastifyRequest<{
-    Params: { id: number };
+    Params: ServiceId;
   }>,
   reply: FastifyReply
 ) => {
@@ -118,20 +108,8 @@ export const getServiceById = async (
 
 export const updateService = async (
   request: FastifyRequest<{
-    Params: { id: number };
-    Body: {
-      label: string;
-      comment?: string;
-      financialProduct: {
-        label: string;
-        interestRate: number;
-      };
-      status?: {
-        label: string;
-        comment?: string;
-      };
-      intangibleId: number;
-    };
+    Params: ServiceId;
+    Body: ServiceUpdate;
   }>,
   reply: FastifyReply
 ) => {
@@ -191,7 +169,7 @@ export const updateService = async (
 
 export const deleteService = async (
   request: FastifyRequest<{
-    Params: { id: number };
+    Params: ServiceId;
   }>,
   reply: FastifyReply
 ) => {

@@ -6,103 +6,18 @@ import {
   updatePersonFinancialProduct,
   deletePersonFinancialProduct,
 } from "../../../controllers/product-financial.controller";
-import { z } from "zod";
-import 'zod-openapi/extend';
-
-// Base schemas for input
-const MonetaryAmountInputSchema = z.object({
-  value: z.number().openapi({
-    description: 'Monetary value',
-    example: 1000.00
-  }),
-  currency: z.string().optional().openapi({
-    description: 'Currency code (ISO 4217)',
-    example: 'BRL'
-  }),
-}).openapi({ ref: 'MonetaryAmountInput' });
-
-// Base schemas for output
-const MonetaryAmountOutputSchema = z.object({
-  value: z.number().openapi({
-    description: 'Monetary value',
-    example: 1000.00
-  }),
-  currency: z.string().openapi({
-    description: 'Currency code (ISO 4217)',
-    example: 'BRL'
-  }),
-}).openapi({ ref: 'MonetaryAmountOutput' });
-
-const FinancialProductRequestSchema = z.object({
-  financialProductId: z.number().openapi({
-    description: 'ID of the financial product',
-    example: 1
-  }),
-  monetaryAmount: MonetaryAmountInputSchema,
-}).openapi({ ref: 'FinancialProductRequest' });
-
-const PersonIdParamSchema = z.object({
-  personsId: z.coerce.number().openapi({
-    description: 'Person ID',
-    example: 1
-  }),
-}).openapi({ ref: 'PersonIdParam' });
-
-const ProductIdParamSchema = z.object({
-  id: z.coerce.number().openapi({
-    description: 'Product ID',
-    example: 1
-  }),
-}).openapi({ ref: 'ProductIdParam' });
-
-const ErrorResponseSchema = z.object({
-  error: z.string().openapi({
-    description: 'Error message',
-    example: 'Erro ao buscar produtos financeiros'
-  }),
-}).openapi({ ref: 'ErrorResponse' });
-
-// Response schemas
-const GetPersonFinancialProductsResponseSchema = z.object({
-  personId: z.number(),
-  name: z.string(),
-  financialAssets: MonetaryAmountOutputSchema.nullable(),
-}).openapi({ 
-  ref: 'GetPersonFinancialProductsResponse',
-  description: 'List of financial products' 
-});
-
-const CreatePersonFinancialProductResponseSchema = z.object({})
-  .openapi({ 
-    ref: 'CreatePersonFinancialProductResponse',
-    description: 'Created financial product' 
-  });
-
-const GetPersonFinancialProductByIdResponseSchema = z.object({
-  personId: z.number(),
-  name: z.string(),
-  financialProduct: MonetaryAmountOutputSchema,
-}).openapi({ 
-  ref: 'GetPersonFinancialProductByIdResponse',
-  description: 'Financial product details' 
-});
-
-const UpdatePersonFinancialProductResponseSchema = z.object({})
-  .openapi({ 
-    ref: 'UpdatePersonFinancialProductResponse',
-    description: 'Updated financial product' 
-  });
-
-const DeletePersonFinancialProductResponseSchema = z.object({})
-  .openapi({ 
-    ref: 'DeletePersonFinancialProductResponse',
-    description: 'Financial product deleted' 
-  });
-
-// Update request schema
-const UpdateFinancialProductRequestSchema = z.object({
-  monetaryAmount: MonetaryAmountInputSchema,
-}).openapi({ ref: 'UpdateFinancialProductRequest' });
+import {
+  PersonIdParamSchema,
+  ProductIdParamSchema,
+  FinancialProductRequestSchema,
+  UpdateFinancialProductRequestSchema,
+  ErrorResponseSchema,
+  GetPersonFinancialProductsResponseSchema,
+  CreatePersonFinancialProductResponseSchema,
+  GetPersonFinancialProductByIdResponseSchema,
+  UpdatePersonFinancialProductResponseSchema,
+  DeletePersonFinancialProductResponseSchema,
+} from "../../../types/product-financial.types";
 
 export default async function (fastify: FastifyInstance) {
   // Get all financial products for a person

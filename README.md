@@ -21,3 +21,19 @@ Run the test cases.
 ## Learn More
 
 To learn Fastify, check out the [Fastify documentation](https://fastify.dev/docs/latest/).
+
+
+flowchart TD
+    Intangible --> Thing
+    Organization --> Thing
+    Person --> Thing
+    Service --> Intangible
+    StatusEnumeration --> Intangible
+    StructuredValue --> Intangible
+    ContactPoint --> StructuredValue
+    MonetaryAmount --> StructuredValue
+    FinancialProduct --> Service
+    GovernmentOrganization --> Organization
+
+
+
