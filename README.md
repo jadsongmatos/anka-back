@@ -22,18 +22,17 @@ Run the test cases.
 
 To learn Fastify, check out the [Fastify documentation](https://fastify.dev/docs/latest/).
 
-
-flowchart TD
-    Intangible --> Thing
-    Organization --> Thing
-    Person --> Thing
-    Service --> Intangible
-    StatusEnumeration --> Intangible
-    StructuredValue --> Intangible
-    ContactPoint --> StructuredValue
-    MonetaryAmount --> StructuredValue
-    FinancialProduct --> Service
-    GovernmentOrganization --> Organization
-
-
-
+erDiagram
+    Client {
+        string id
+        string name
+        string email
+        string status
+    }
+    FinancialAsset {
+        string id
+        string name
+        decimal value
+        string client_id
+    }
+    Client ||--o{ FinancialAsset : "client_id"

@@ -12,109 +12,33 @@ datasource db {
 }
 
 generator zod {
-  provider = "zod-prisma-types"
+  provider      = "zod-prisma-types"
   output        = "./zod"
   relationModel = "default"
 }
 
-model Thing {
-  id      Int     @id @default(autoincrement())
-  label   String
-  comment String?
-
-  person       Person?
-  organization Organization?
-  intangible   Intangible?
+model Client {
+  id          Int           @id @default(autoincrement())
+  name        String
+  email       String        @unique
+  active      Boolean       @default(true)
+  allocations ClientAsset[]
 }
 
-model Intangible {
-  id      Int     @id @default(autoincrement())
-  label   String?
-  comment String?
-
-  thingId Int   @unique
-  thing   Thing @relation(fields: [thingId], references: [id])
-
-  service           Service?
-  structuredValue   StructuredValue?
-  statusEnumeration StatusEnumeration?
+model Asset {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  allocations ClientAsset[]
 }
 
-model StructuredValue {
-  id           Int        @id @default(autoincrement())
-  label        String?
-  comment      String?
-  intangibleId Int        @unique
-  intangible   Intangible @relation(fields: [intangibleId], references: [id])
+model ClientAsset {
+  id       Int   @id @default(autoincrement())
+  clientId Int
+  assetId  Int
+  value    Float
 
-  monetaryAmount MonetaryAmount?
-  contactPoint   ContactPoint?
-}
+  client Client @relation(fields: [clientId], references: [id])
+  asset  Asset  @relation(fields: [assetId], references: [id])
 
-model ContactPoint {
-  id                Int             @id @default(autoincrement())
-  label             String
-  comment           String?
-  email             String?
-  telephone         String?
-  structuredValueId Int             @unique
-  structuredValue   StructuredValue @relation(fields: [structuredValueId], references: [id])
-}
-
-model Service {
-  id           Int        @id @default(autoincrement())
-  intangibleId Int        @unique
-  intangible   Intangible @relation(fields: [intangibleId], references: [id])
-
-  financialProduct FinancialProduct?
-}
-
-model FinancialProduct {
-  id           Int     @id @default(autoincrement())
-  serviceId    Int     @unique
-  label        String  @unique
-  interestRate Float
-  service      Service @relation(fields: [serviceId], references: [id])
-}
-
-model Organization {
-  id      Int     @id @default(autoincrement())
-  label   String
-  comment String?
-  thingId Int     @unique
-  thing   Thing   @relation(fields: [thingId], references: [id])
-
-  governmentOrganization GovernmentOrganization?
-}
-
-model GovernmentOrganization {
-  id             Int          @id @default(autoincrement())
-  label          String
-  comment        String?
-  organizationId Int          @unique
-  organization   Organization @relation(fields: [organizationId], references: [id])
-}
-
-model Person {
-  id                 Int     @id @default(autoincrement())
-  label              String
-  comment            String?
-  thingId            Int     @unique
-  thing              Thing   @relation(fields: [thingId], references: [id])
-}
-
-model MonetaryAmount {
-  id                Int             @id @default(autoincrement())
-  structuredValueId Int             @unique
-  value             Float           @default(0.0)
-  currency          String          @default("BRL") // ISO 4217 currency code
-  structuredValue   StructuredValue @relation(fields: [structuredValueId], references: [id])
-}
-
-model StatusEnumeration {
-  id           Int        @id @default(autoincrement())
-  label        String
-  comment      String?
-  intangibleId Int        @unique
-  intangible   Intangible @relation(fields: [intangibleId], references: [id])
+  @@unique([clientId, assetId])
 }
