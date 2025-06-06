@@ -10,7 +10,7 @@ import type { Prisma } from '../../generated/prisma';
 // ENUMS
 /////////////////////////////////////////
 
-export const TransactionIsolationLevelSchema = z.enum(['Serializable']);
+export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCommitted','RepeatableRead','Serializable']);
 
 export const ClientScalarFieldEnumSchema = z.enum(['id','name','email','active']);
 
@@ -19,6 +19,10 @@ export const AssetScalarFieldEnumSchema = z.enum(['id','name']);
 export const ClientAssetScalarFieldEnumSchema = z.enum(['id','clientId','assetId','value']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
+
+export const ClientOrderByRelevanceFieldEnumSchema = z.enum(['name','email']);
+
+export const AssetOrderByRelevanceFieldEnumSchema = z.enum(['name']);
 /////////////////////////////////////////
 // MODELS
 /////////////////////////////////////////
@@ -165,7 +169,8 @@ export const ClientOrderByWithRelationInputSchema: z.ZodType<Prisma.ClientOrderB
   name: z.lazy(() => SortOrderSchema).optional(),
   email: z.lazy(() => SortOrderSchema).optional(),
   active: z.lazy(() => SortOrderSchema).optional(),
-  allocations: z.lazy(() => ClientAssetOrderByRelationAggregateInputSchema).optional()
+  allocations: z.lazy(() => ClientAssetOrderByRelationAggregateInputSchema).optional(),
+  _relevance: z.lazy(() => ClientOrderByRelevanceInputSchema).optional()
 }).strict();
 
 export const ClientWhereUniqueInputSchema: z.ZodType<Prisma.ClientWhereUniqueInput> = z.union([
@@ -225,7 +230,8 @@ export const AssetWhereInputSchema: z.ZodType<Prisma.AssetWhereInput> = z.object
 export const AssetOrderByWithRelationInputSchema: z.ZodType<Prisma.AssetOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
-  allocations: z.lazy(() => ClientAssetOrderByRelationAggregateInputSchema).optional()
+  allocations: z.lazy(() => ClientAssetOrderByRelationAggregateInputSchema).optional(),
+  _relevance: z.lazy(() => AssetOrderByRelevanceInputSchema).optional()
 }).strict();
 
 export const AssetWhereUniqueInputSchema: z.ZodType<Prisma.AssetWhereUniqueInput> = z.union([
@@ -487,6 +493,7 @@ export const StringFilterSchema: z.ZodType<Prisma.StringFilter> = z.object({
   contains: z.string().optional(),
   startsWith: z.string().optional(),
   endsWith: z.string().optional(),
+  search: z.string().optional(),
   not: z.union([ z.string(),z.lazy(() => NestedStringFilterSchema) ]).optional(),
 }).strict();
 
@@ -503,6 +510,12 @@ export const ClientAssetListRelationFilterSchema: z.ZodType<Prisma.ClientAssetLi
 
 export const ClientAssetOrderByRelationAggregateInputSchema: z.ZodType<Prisma.ClientAssetOrderByRelationAggregateInput> = z.object({
   _count: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const ClientOrderByRelevanceInputSchema: z.ZodType<Prisma.ClientOrderByRelevanceInput> = z.object({
+  fields: z.union([ z.lazy(() => ClientOrderByRelevanceFieldEnumSchema),z.lazy(() => ClientOrderByRelevanceFieldEnumSchema).array() ]),
+  sort: z.lazy(() => SortOrderSchema),
+  search: z.string()
 }).strict();
 
 export const ClientCountOrderByAggregateInputSchema: z.ZodType<Prisma.ClientCountOrderByAggregateInput> = z.object({
@@ -561,6 +574,7 @@ export const StringWithAggregatesFilterSchema: z.ZodType<Prisma.StringWithAggreg
   contains: z.string().optional(),
   startsWith: z.string().optional(),
   endsWith: z.string().optional(),
+  search: z.string().optional(),
   not: z.union([ z.string(),z.lazy(() => NestedStringWithAggregatesFilterSchema) ]).optional(),
   _count: z.lazy(() => NestedIntFilterSchema).optional(),
   _min: z.lazy(() => NestedStringFilterSchema).optional(),
@@ -573,6 +587,12 @@ export const BoolWithAggregatesFilterSchema: z.ZodType<Prisma.BoolWithAggregates
   _count: z.lazy(() => NestedIntFilterSchema).optional(),
   _min: z.lazy(() => NestedBoolFilterSchema).optional(),
   _max: z.lazy(() => NestedBoolFilterSchema).optional()
+}).strict();
+
+export const AssetOrderByRelevanceInputSchema: z.ZodType<Prisma.AssetOrderByRelevanceInput> = z.object({
+  fields: z.union([ z.lazy(() => AssetOrderByRelevanceFieldEnumSchema),z.lazy(() => AssetOrderByRelevanceFieldEnumSchema).array() ]),
+  sort: z.lazy(() => SortOrderSchema),
+  search: z.string()
 }).strict();
 
 export const AssetCountOrderByAggregateInputSchema: z.ZodType<Prisma.AssetCountOrderByAggregateInput> = z.object({
@@ -833,6 +853,7 @@ export const NestedStringFilterSchema: z.ZodType<Prisma.NestedStringFilter> = z.
   contains: z.string().optional(),
   startsWith: z.string().optional(),
   endsWith: z.string().optional(),
+  search: z.string().optional(),
   not: z.union([ z.string(),z.lazy(() => NestedStringFilterSchema) ]).optional(),
 }).strict();
 
@@ -879,6 +900,7 @@ export const NestedStringWithAggregatesFilterSchema: z.ZodType<Prisma.NestedStri
   contains: z.string().optional(),
   startsWith: z.string().optional(),
   endsWith: z.string().optional(),
+  search: z.string().optional(),
   not: z.union([ z.string(),z.lazy(() => NestedStringWithAggregatesFilterSchema) ]).optional(),
   _count: z.lazy(() => NestedIntFilterSchema).optional(),
   _min: z.lazy(() => NestedStringFilterSchema).optional(),
@@ -927,6 +949,7 @@ export const ClientAssetCreateOrConnectWithoutClientInputSchema: z.ZodType<Prism
 
 export const ClientAssetCreateManyClientInputEnvelopeSchema: z.ZodType<Prisma.ClientAssetCreateManyClientInputEnvelope> = z.object({
   data: z.union([ z.lazy(() => ClientAssetCreateManyClientInputSchema),z.lazy(() => ClientAssetCreateManyClientInputSchema).array() ]),
+  skipDuplicates: z.boolean().optional()
 }).strict();
 
 export const ClientAssetUpsertWithWhereUniqueWithoutClientInputSchema: z.ZodType<Prisma.ClientAssetUpsertWithWhereUniqueWithoutClientInput> = z.object({
@@ -973,6 +996,7 @@ export const ClientAssetCreateOrConnectWithoutAssetInputSchema: z.ZodType<Prisma
 
 export const ClientAssetCreateManyAssetInputEnvelopeSchema: z.ZodType<Prisma.ClientAssetCreateManyAssetInputEnvelope> = z.object({
   data: z.union([ z.lazy(() => ClientAssetCreateManyAssetInputSchema),z.lazy(() => ClientAssetCreateManyAssetInputSchema).array() ]),
+  skipDuplicates: z.boolean().optional()
 }).strict();
 
 export const ClientAssetUpsertWithWhereUniqueWithoutAssetInputSchema: z.ZodType<Prisma.ClientAssetUpsertWithWhereUniqueWithoutAssetInput> = z.object({
@@ -1319,10 +1343,7 @@ export const ClientUpsertArgsSchema: z.ZodType<Prisma.ClientUpsertArgs> = z.obje
 
 export const ClientCreateManyArgsSchema: z.ZodType<Prisma.ClientCreateManyArgs> = z.object({
   data: z.union([ ClientCreateManyInputSchema,ClientCreateManyInputSchema.array() ]),
-}).strict() ;
-
-export const ClientCreateManyAndReturnArgsSchema: z.ZodType<Prisma.ClientCreateManyAndReturnArgs> = z.object({
-  data: z.union([ ClientCreateManyInputSchema,ClientCreateManyInputSchema.array() ]),
+  skipDuplicates: z.boolean().optional(),
 }).strict() ;
 
 export const ClientDeleteArgsSchema: z.ZodType<Prisma.ClientDeleteArgs> = z.object({
@@ -1339,12 +1360,6 @@ export const ClientUpdateArgsSchema: z.ZodType<Prisma.ClientUpdateArgs> = z.obje
 }).strict() ;
 
 export const ClientUpdateManyArgsSchema: z.ZodType<Prisma.ClientUpdateManyArgs> = z.object({
-  data: z.union([ ClientUpdateManyMutationInputSchema,ClientUncheckedUpdateManyInputSchema ]),
-  where: ClientWhereInputSchema.optional(),
-  limit: z.number().optional(),
-}).strict() ;
-
-export const ClientUpdateManyAndReturnArgsSchema: z.ZodType<Prisma.ClientUpdateManyAndReturnArgs> = z.object({
   data: z.union([ ClientUpdateManyMutationInputSchema,ClientUncheckedUpdateManyInputSchema ]),
   where: ClientWhereInputSchema.optional(),
   limit: z.number().optional(),
@@ -1371,10 +1386,7 @@ export const AssetUpsertArgsSchema: z.ZodType<Prisma.AssetUpsertArgs> = z.object
 
 export const AssetCreateManyArgsSchema: z.ZodType<Prisma.AssetCreateManyArgs> = z.object({
   data: z.union([ AssetCreateManyInputSchema,AssetCreateManyInputSchema.array() ]),
-}).strict() ;
-
-export const AssetCreateManyAndReturnArgsSchema: z.ZodType<Prisma.AssetCreateManyAndReturnArgs> = z.object({
-  data: z.union([ AssetCreateManyInputSchema,AssetCreateManyInputSchema.array() ]),
+  skipDuplicates: z.boolean().optional(),
 }).strict() ;
 
 export const AssetDeleteArgsSchema: z.ZodType<Prisma.AssetDeleteArgs> = z.object({
@@ -1391,12 +1403,6 @@ export const AssetUpdateArgsSchema: z.ZodType<Prisma.AssetUpdateArgs> = z.object
 }).strict() ;
 
 export const AssetUpdateManyArgsSchema: z.ZodType<Prisma.AssetUpdateManyArgs> = z.object({
-  data: z.union([ AssetUpdateManyMutationInputSchema,AssetUncheckedUpdateManyInputSchema ]),
-  where: AssetWhereInputSchema.optional(),
-  limit: z.number().optional(),
-}).strict() ;
-
-export const AssetUpdateManyAndReturnArgsSchema: z.ZodType<Prisma.AssetUpdateManyAndReturnArgs> = z.object({
   data: z.union([ AssetUpdateManyMutationInputSchema,AssetUncheckedUpdateManyInputSchema ]),
   where: AssetWhereInputSchema.optional(),
   limit: z.number().optional(),
@@ -1423,10 +1429,7 @@ export const ClientAssetUpsertArgsSchema: z.ZodType<Prisma.ClientAssetUpsertArgs
 
 export const ClientAssetCreateManyArgsSchema: z.ZodType<Prisma.ClientAssetCreateManyArgs> = z.object({
   data: z.union([ ClientAssetCreateManyInputSchema,ClientAssetCreateManyInputSchema.array() ]),
-}).strict() ;
-
-export const ClientAssetCreateManyAndReturnArgsSchema: z.ZodType<Prisma.ClientAssetCreateManyAndReturnArgs> = z.object({
-  data: z.union([ ClientAssetCreateManyInputSchema,ClientAssetCreateManyInputSchema.array() ]),
+  skipDuplicates: z.boolean().optional(),
 }).strict() ;
 
 export const ClientAssetDeleteArgsSchema: z.ZodType<Prisma.ClientAssetDeleteArgs> = z.object({
@@ -1443,12 +1446,6 @@ export const ClientAssetUpdateArgsSchema: z.ZodType<Prisma.ClientAssetUpdateArgs
 }).strict() ;
 
 export const ClientAssetUpdateManyArgsSchema: z.ZodType<Prisma.ClientAssetUpdateManyArgs> = z.object({
-  data: z.union([ ClientAssetUpdateManyMutationInputSchema,ClientAssetUncheckedUpdateManyInputSchema ]),
-  where: ClientAssetWhereInputSchema.optional(),
-  limit: z.number().optional(),
-}).strict() ;
-
-export const ClientAssetUpdateManyAndReturnArgsSchema: z.ZodType<Prisma.ClientAssetUpdateManyAndReturnArgs> = z.object({
   data: z.union([ ClientAssetUpdateManyMutationInputSchema,ClientAssetUncheckedUpdateManyInputSchema ]),
   where: ClientAssetWhereInputSchema.optional(),
   limit: z.number().optional(),

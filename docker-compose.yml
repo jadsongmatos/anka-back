@@ -4,3 +4,11 @@ services:
     restart: always
     environment:
       MARIADB_ROOT_PASSWORD: example
+      MARIADB_DATABASE: anka
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+volumes:
+  mariadb_data:
